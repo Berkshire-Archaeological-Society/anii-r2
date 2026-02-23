@@ -338,8 +338,7 @@ def sites_get_summary(email):
     if anviluser["systemrole"] == "System Administrator":
       query = "SELECT SiteId,SiteName FROM site ORDER BY site.SiteId" 
     else:
-      query = "SELECT site.SiteId,site.SiteName FROM site,sys_siteuserrole WHERE site.SiteId = sys_siteuserrole.SiteId AND sys_siteuserrole.Email = '"
-      + email + "' AND sys_siteuserrole.Enabled = 'True' ORDER BY site.SiteId"
+      query = "SELECT site.SiteId,site.SiteName FROM site,sys_siteuserrole WHERE site.SiteId = sys_siteuserrole.SiteId AND sys_siteuserrole.Email = '" + email + "' AND sys_siteuserrole.Enabled = 'True' ORDER BY site.SiteId"
     cur.execute(query)
     result = cur.fetchall()
     msg = "Found " + str(len(result)) + " sites for user " + str(anviluser["email"])
