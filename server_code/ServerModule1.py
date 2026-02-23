@@ -465,6 +465,7 @@ def table_get(site_id,table_name):
       # Automatically converts to the best possible types
       pdf_result = pdf_result.convert_dtypes()
       #logmsg("INFO",pdf_result.dtypes)
+      pdf_result.fillna('')
 
       msg = query + ". Found " + str(len(result)) + " " + table_name + " rows."
       logmsg("INFO",msg)
