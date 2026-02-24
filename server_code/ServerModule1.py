@@ -454,18 +454,20 @@ def table_get(site_id,table_name):
       cur.execute(query)
       result = cur.fetchall()
       # put query result in pandas dataframe
-      # *************************************************
-      # need to add code for converting Int datatypes to Int64 to avoid problems with None values in Int columns, 
-      # which will be converted to NaN in pandas (all Int values will become Floats) and then to 'nan' string when converting to string for sending to client, 
-      # which is not good for client side processing (need to be empty string instead) 
-      # *************************************************
+    
       #
       pdf_result = pd.DataFrame(result) 
-      #logmsg("INFO",pdf_result.dtypes)
+    
       # Automatically converts to the best possible types
       pdf_result = pdf_result.convert_dtypes()
-      #logmsg("INFO",pdf_result.dtypes)
-      #pdf_result.replace(np.nan,'',regex=True,inplace=True)
+
+      # 1. Identify numeric columns (int and float) - replace NaN with 0
+      num_cols = pdf_result.select_dtypes(include=['number']).columns
+      pdf_result[num_cols] = pdf_result[num_cols].fillna(0)
+
+      # 2. Identify object/string columns - replace NaN with empty string
+      obj_cols = pdf_result.select_dtypes(exclude=['number']).columns
+      pdf_result[obj_cols] = pdf_result[obj_cols].fillna('')
 
       msg = query + ". Found " + str(len(result)) + " " + table_name + " rows."
       logmsg("INFO",msg)
